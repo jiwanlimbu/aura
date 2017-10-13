@@ -1,4 +1,4 @@
-# Copyright 2013 Metacloud, Inc.
+#Copyright 2013 Metacloud, Inc.
 # Copyright 2012 OpenStack Foundation
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -12,7 +12,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-# test
+
 """Workflow Logic the Assignment service."""
 
 import functools
@@ -30,7 +30,7 @@ from keystone.common import wsgi
 import keystone.conf
 from keystone import exception
 from keystone.i18n import _
-
+from keystone.common import aura_attributes
 
 CONF = keystone.conf.CONF
 LOG = log.getLogger(__name__)
@@ -43,12 +43,9 @@ class TenantAssignment(controller.V2Controller):
     @controller.v2_auth_deprecated
     def get_projects_for_token(self, request, **kw):
         """Get valid tenants for token based on token used to authenticate.
-
         Pulls the token from the context, validates it and gets the valid
         tenants for the user in the token.
-
         Doesn't care about token scopedness.
-
         """
         token_ref = utils.get_token_ref(request.context_dict)
 
@@ -129,10 +126,8 @@ class RoleAssignmentV2(controller.V2Controller):
     @controller.v2_deprecated
     def get_user_roles(self, request, user_id, tenant_id=None):
         """Get the roles for a user and tenant pair.
-
         Since we're trying to ignore the idea of user-only roles we're
         not implementing them in hopes that the idea will die off.
-
         """
         self.assert_admin(request)
         # NOTE(davechen): Router without project id is defined,
@@ -148,10 +143,8 @@ class RoleAssignmentV2(controller.V2Controller):
     @controller.v2_deprecated
     def add_role_to_user(self, request, user_id, role_id, tenant_id=None):
         """Add a role to a user and tenant pair.
-
         Since we're trying to ignore the idea of user-only roles we're
         not implementing them in hopes that the idea will die off.
-
         """
         self.assert_admin(request)
         if tenant_id is None:
@@ -167,10 +160,8 @@ class RoleAssignmentV2(controller.V2Controller):
     @controller.v2_deprecated
     def remove_role_from_user(self, request, user_id, role_id, tenant_id=None):
         """Remove a role from a user and tenant pair.
-
         Since we're trying to ignore the idea of user-only roles we're
         not implementing them in hopes that the idea will die off.
-
         """
         self.assert_admin(request)
         if tenant_id is None:
@@ -186,12 +177,10 @@ class RoleAssignmentV2(controller.V2Controller):
     @controller.v2_deprecated
     def get_role_refs(self, request, user_id):
         """Ultimate hack to get around having to make role_refs first-class.
-
         This will basically iterate over the various roles the user has in
         all tenants the user is a member of and create fake role_refs where
         the id encodes the user-tenant-role information so we can look
         up the appropriate data when we need to delete them.
-
         """
         self.assert_admin(request)
         tenants = self.assignment_api.list_projects_for_user(user_id)
@@ -215,10 +204,8 @@ class RoleAssignmentV2(controller.V2Controller):
     @controller.v2_deprecated
     def create_role_ref(self, request, user_id, role):
         """Used for adding a user to a tenant.
-
         In the legacy data model adding a user to a tenant required setting
         a role.
-
         """
         self.assert_admin(request)
         # TODO(termie): for now we're ignoring the actual role
@@ -234,14 +221,11 @@ class RoleAssignmentV2(controller.V2Controller):
     @controller.v2_deprecated
     def delete_role_ref(self, request, user_id, role_ref_id):
         """Used for deleting a user from a tenant.
-
         In the legacy data model removing a user from a tenant required
         deleting a role.
-
         To emulate this, we encode the tenant and role in the role_ref_id,
         and if this happens to be the last role for the user-tenant pair,
         we remove the user from the tenant.
-
         """
         self.assert_admin(request)
         # TODO(termie): for now we're ignoring the actual role
@@ -276,17 +260,14 @@ class ProjectAssignmentV3(controller.V3Controller):
 @dependency.requires('role_api')
 class RoleV3(controller.V3Controller):
     """The V3 Role CRUD APIs.
-
     To ease complexity (and hence risk) in writing the policy rules for the
     role APIs, we create separate policy actions for roles that are domain
     specific, as opposed to those that are global. In order to achieve this
     each of the role API methods has a wrapper method that checks to see if the
     role is global or domain specific.
-
     NOTE (henry-nash): If this separate global vs scoped policy action pattern
     becomes repeated for other entities, we should consider encapsulating this
     into a specialized router class.
-
     """
 
     collection_name = 'roles'
@@ -575,7 +556,7 @@ class ImpliedRolesV3(controller.V3Controller):
                      'role_api')
 class GrantAssignmentV3(controller.V3Controller):
     """The V3 Grant Assignment APIs."""
-
+    #aura_att = aura_attributes.aura_attributes()
     collection_name = 'roles'
     member_name = 'role'
 
@@ -608,18 +589,24 @@ class GrantAssignmentV3(controller.V3Controller):
                                 domain_id=None, project_id=None,
                                 allow_no_user=False):
         """Check protection for role grant APIs.
-
         The policy rule might want to inspect attributes of any of the entities
         involved in the grant.  So we get these and pass them to the
         check_protection() handler in the controller.
-
         """
+        aura_att = aura_attributes.aura_attributes()
         ref = {}
         if role_id:
             ref['role'] = self.role_api.get_role(role_id)
         if user_id:
             try:
                 ref['user'] = self.identity_api.get_user(user_id)
+                print ("REF 'USER' : ")
+                reg_username = ref['user']['name']
+                print reg_username
+                ref['location'] = aura_att.get(reg_username, "location")
+                ref['admin_unit'] = aura_att.get(reg_username, "admin_unit")
+                ref['user_clearance'] = aura_att.get(reg_username, "clearance")
+                #ref = ref
             except exception.UserNotFound:
                 if not allow_no_user:
                     raise
@@ -706,41 +693,32 @@ class RoleAssignmentV3(controller.V3Controller):
 
     def _format_entity(self, context, entity):
         """Format an assignment entity for API response.
-
         The driver layer returns entities as dicts containing the ids of the
         actor (e.g. user or group), target (e.g. domain or project) and role.
         If it is an inherited role, then this is also indicated. Examples:
-
         For a non-inherited expanded assignment from group membership:
         {'user_id': user_id,
          'project_id': project_id,
          'role_id': role_id,
          'indirect': {'group_id': group_id}}
-
         or, for a project inherited role:
-
         {'user_id': user_id,
          'project_id': project_id,
          'role_id': role_id,
          'indirect': {'project_id': parent_id}}
-
         or, for a role that was implied by a prior role:
-
         {'user_id': user_id,
          'project_id': project_id,
          'role_id': role_id,
          'indirect': {'role_id': prior role_id}}
-
         It is possible to deduce if a role assignment came from group
         membership if it has both 'user_id' in the main body of the dict and
         'group_id' in the 'indirect' subdict, as well as it is possible to
         deduce if it has come from inheritance if it contains both a
         'project_id' in the main body of the dict and 'parent_id' in the
         'indirect' subdict.
-
         This function maps this into the format to be returned via the API,
         e.g. for the second example above:
-
         {
             'user': {
                 {'id': user_id}
@@ -759,7 +737,6 @@ class RoleAssignmentV3(controller.V3Controller):
                               'roles/role_id/inherited_to_projects'
             }
         }
-
         """
         formatted_entity = {'links': {}}
         inherited_assignment = entity.get('inherited_to_projects')
@@ -859,13 +836,11 @@ class RoleAssignmentV3(controller.V3Controller):
 
     def _assert_effective_filters(self, inherited, group, domain):
         """Assert that useless filter combinations are avoided.
-
         In effective mode, the following filter combinations are useless, since
         they would always return an empty list of role assignments:
         - group id, since no group assignment is returned in effective mode;
         - domain id and inherited, since no domain inherited assignment is
         returned in effective mode.
-
         """
         if group:
             msg = _('Combining effective and group filter will always '
@@ -889,10 +864,8 @@ class RoleAssignmentV3(controller.V3Controller):
 
     def _list_role_assignments(self, request, filters, include_subtree=False):
         """List role assignments to user and groups on domains and projects.
-
         Return a list of all existing role assignments in the system, filtered
         by assignments attributes, if provided.
-
         If effective option is used and OS-INHERIT extension is enabled, the
         following functions will be applied:
         1) For any group role assignment on a target, replace it by a set of
@@ -901,14 +874,11 @@ class RoleAssignmentV3(controller.V3Controller):
         2) For any inherited role assignment for an actor on a target, replace
         it by a set of role assignments for that actor on every project under
         that target.
-
         It means that, if effective mode is used, no group or domain inherited
         assignments will be present in the resultant list. Thus, combining
         effective with them is invalid.
-
         As a role assignment contains only one actor and one target, providing
         both user and group ids or domain and project ids is invalid as well.
-
         """
         params = request.params
         effective = 'effective' in params and (
@@ -957,11 +927,9 @@ class RoleAssignmentV3(controller.V3Controller):
 
     def _check_list_tree_protection(self, request, protection_info):
         """Check protection for list assignment for tree API.
-
         The policy rule might want to inspect the domain of any project filter
         so if one is defined, then load the project ref and pass it to the
         check protection method.
-
         """
         ref = {}
         for filter, value in protection_info['filter_attr'].items():
@@ -984,12 +952,10 @@ class RoleAssignmentV3(controller.V3Controller):
 
     def list_role_assignments_wrapper(self, request):
         """Main entry point from router for list role assignments.
-
         Since we want different policy file rules to be applicable based on
         whether there the include_subtree query parameter is part of the API
         call, this method checks for this and then calls the appropriate
         protected entry point.
-
         """
         params = request.params
         if 'include_subtree' in params and (

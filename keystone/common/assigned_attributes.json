@@ -1,0 +1,59 @@
+[
+        {
+            "id": "ken",
+            "admin_unit": "accounting",
+            "location": "san_antonio",
+            "admin_roles": "sr_sec_officer",
+            "entity": "admin"
+        },
+        {
+            "id": "admin",
+            "admin_unit": "accounting",
+            "location": "san_antonio",
+            "admin_roles": "sr_sec_officer",
+            "entity": "admin"
+        },
+        {
+            "id": "john",
+            "admin_unit": "accounting",
+            "location": "florida",
+            "admin_roles": "sr_sec_officer",
+            "entity": "admin"
+        },
+        {
+            "id": "sam",
+            "admin_unit": "finance",
+            "location": "new_york",
+            "admin_roles": "security_officer",
+            "entity": "admin"
+        },
+        {
+            "id": "tim",
+            "admin_unit": "accounting",
+            "location": "austin",
+            "clearance": "top_secret",
+            "entity": "user"
+        },
+        {
+            "id": "don",
+            "admin_unit": "accounting",
+            "location": "san_antonio",
+            "clearance": "confidential",
+            "entity": "user"
+        },
+        {
+            "id": "ted",
+            "admin_unit": "accounting",
+            "location": "san_antonio",
+            "clearance": "FIRED",
+            "entity": "user"
+        },
+	{
+            "id": "ben",
+            "admin_unit": "accounting",
+            "location": "austin",
+            "clearance": "classified",
+            "entity": "user"
+        }
+
+]

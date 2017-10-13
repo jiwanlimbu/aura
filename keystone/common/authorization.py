@@ -21,7 +21,8 @@ from oslo_log import log
 from keystone import exception
 from keystone.i18n import _, _LW
 from keystone.models import token_model
-
+import json
+from keystone.common import aura_attributes
 
 AUTH_CONTEXT_ENV = 'KEYSTONE_AUTH_CONTEXT'
 """Environment variable used to convey the Keystone auth context.
@@ -55,7 +56,7 @@ It is a dictionary with the following attributes:
 
 LOG = log.getLogger(__name__)
 
-
+#admin_unit = enforcer.admin_unit(admin)
 def token_to_auth_context(token):
     if not isinstance(token, token_model.KeystoneToken):
         raise exception.UnexpectedError(_('token reference must be a '
@@ -65,6 +66,15 @@ def token_to_auth_context(token):
                     'is_delegated_auth': False}
     try:
         auth_context['user_id'] = token.user_id
+	#NEW LINES HERE
+        aura_att = aura_attributes.aura_attributes()	
+        admin_username = str(token.user_name)		
+        admin_unit = aura_att.get(admin_username, "admin_unit")
+        location  = aura_att.get(admin_username, "location")
+	admin_roles  = aura_att.get(admin_username, "admin_roles")
+        auth_context['admin_unit'] = admin_unit
+	auth_context['location'] = location
+	auth_context['admin_roles'] = admin_roles
     except KeyError:
         LOG.warning(_LW('RBAC: Invalid user data in token'))
         raise exception.Unauthorized(_('No user_id in token'))
