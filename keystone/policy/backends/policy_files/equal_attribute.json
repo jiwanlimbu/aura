@@ -1,0 +1,19 @@
+[
+{
+   "admin": {
+      "admin_unit": [
+         "accounting"
+      ]
+},
+    "user":{
+     "admin_unit":[
+         "accounting"
+      ]
+},
+     "role":[
+          "accountant"
+]
+
+   }
+]
+

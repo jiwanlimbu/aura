@@ -87,16 +87,46 @@ def authorize_aura(credentials, target):
                 #print user_location
                 user_user_clearance = target.get('target.user_clearance')
                 target_role = target.get('target.role.name')
+#                 for i in range(11):
+#                    try:
+#                       admin_attribute+str(i) = credentials.get('attribute'+str(i))
+#                       user_attribute+str(i) = credentials.get('target.attribute'+str(i))
+#                   except:
+#                      continue
+#                with open('/opt/stack/keystone/keystone/policy/backends/policy_files/equal_attribute.json') as policy:
+#                    policy = json.load(policy)
+#                for i in range(len(policy)):   
+#                    if True == (target_role in policy[i]["role"]):
+#                        if True == (admin_admin_unit in policy[i]["admin"]["admin_unit"]) and True == (user_admin_unit in policy[i]["user"]["admin_unit"]):
+#                            print "ADMIN UNIT IS PRESENT!"
+#                           # else: 
+#                           #     print "admin_unit mismatch" 
+#                       # else:
+#                        #    print "target role not found"              
+#                raise exception.Forbidden("Unathorised user role assignment attempt!!")  
                 with open('/opt/stack/keystone/keystone/policy/backends/attribute_policy.json') as policy:
                     policy = json.load(policy)
                 for i in range(len(policy)):
                     print "ADMIN ROLES: " 
                     print policy[i]["role"]
                     print "Target Role: " + target_role
+		    #for j in (policy[i]["role"]):
 		    if True == (target_role in policy[i]["role"]):
 			print "target role is present: <<" + target_role + ">>"
+		    #for j in (policy[i]["role"]):
+                        #if j == target_role:
+                        #print "ADMIN_ADMIN_UNIT: <<" + admin_admin_unit + ">> in ROLES:"
+                        #print policy[i]["admin"]["admin_unit"]
+                        #print "USER_ADMIN_UNIT: <<" + user_admin_unit + ">> in ROLES:"
+                        #print policy[i]["user"]["admin_unit"]
                         if (True == (admin_admin_unit in policy[i]["admin"]["admin_unit"]) and True == (user_admin_unit in policy[i]["user"]["admin_unit"])):
                             print "ADMIN UNIT IS PRESENT: <<" + admin_admin_unit + ">>"
+                            #print "USER ADMIN UNIT IS PRESENT: <<"+ user_admin_unit + ">>"
+                            #print "ADMIN LOCATION: <<" + admin_location + ">>, User location: <<" + user_location + ">>"
+                            #print "Admin policy location:"
+                            #print policy[i]["admin"]["location"]
+                            #print "User location policy:"
+                            #print policy[i]["user"]["location"]
                             if admin_location in policy[i]["admin"]["location"] and \
                                 user_location in policy[i]["user"]["location"]:
                                 print "LOCATION IS PRESENT"
@@ -109,6 +139,12 @@ def authorize_aura(credentials, target):
                                     if (True == (user_user_clearance in policy[i]["user"]["clearance"])):
                                         print "USER CLEARANCE MATCH"
                                         print "getting there......."
+                                       
+#                                        print(time.time()) 
+#                                        print("**********")
+#                                        print ("Authorized granted!")
+#                                        print("**********")
+#                                        return True
                                         for j in range(11):
                                             print "-------------------------------------"
                                             print "admin_attribute"+str(j)
@@ -147,13 +183,13 @@ class Policy(base.PolicyDriverBase):
             except:          
                 end_time = time.time()
                 delta = end_time - start_time
-                print("---------------print time diff FAIL!! ----------------")
-                print delta * 1000
+                print("---------------print time diff ----------------")
+                print delta
                 raise exception.Forbidden("Unathorised user role assignment attempt!!") 
         end_time = time.time()
         delta = end_time - start_time
-        print("---------------print time diff SUCCESS!!----------------")
-        print delta * 1000
+        print("---------------print time diff ----------------")
+        print delta
                      
     def create_policy(self, policy_id, policy):
         raise exception.NotImplemented()

@@ -1,14 +1,85 @@
 [
 	{
 		"admin": {
-			"admin_unit": "accounting",
-			"location": "san_antonio",
-			"admin_roles": ["sr_sec_officer"]
+			"admin_unit": ["accounting"],
+			"location": ["san_antonio"],
+			"admin_roles": ["sr_sec_officer"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "accounting",
-			"location": "san_antonio",
-			"clearance": "confidential"
+			"admin_unit": ["accounting"],
+			"location": ["san_antonio"],
+			"clearance": ["confidential"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+		},
+		"role": [
+			"chief_accountant",
+			"accountant",
+			"auditor"
+		]
+	},
+	{
+		"admin": {
+			"admin_unit": ["accounting"],
+			"location": ["san_antonio"],
+			"admin_roles": [
+				"sr_sec_officer",
+				"security_officer"
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+		},
+		"user": {
+			"admin_unit": ["accounting"],
+			"location": ["san_antonio"],
+			"clearance": ["top_secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+		},
+		"role": [
+			"sr_accountant",
+			"auditor"
+		]
+	},
+	{
+		"admin": {
+			"admin_unit": ["accounting"],
+			"location": ["san_antonio"],
+			"admin_roles": [
+				"sr_sec_officer",
+				"security_officer"
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+
+		},
+		"user": {
+			"admin_unit": ["accounting"],
+			"location": ["san_antonio"],
+			"clearance": ["secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+		},
+		"role": [
+			"auditor"
+		]
+	},
+	{
+		"admin": {
+			"admin_unit": ["accounting"],
+			"location": ["new_york"],
+			"admin_roles": ["sr_sec_officer"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+		},
+		"user": {
+			"admin_unit": ["accounting"],
+			"location": ["new_york"],
+			"clearance": ["confidential"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"chief_accountant",
@@ -18,17 +89,22 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "accounting",
-			"location": "san_antonio",
+			"admin_unit": ["accounting"],
+			"location": ["new york"],
 			"admin_roles": [
 				"sr_sec_officer",
 				"security_officer"
-			]
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "accounting",
-			"location": "san_antonio",
-			"clearance": "top_secret"
+			"admin_unit": ["accounting"],
+			"location": ["new york"],
+			"clearance": ["top_secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
+
 		},
 		"role": [
 			"sr_accountant",
@@ -37,17 +113,21 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "accounting",
-			"location": "san_antonio",
+			"admin_unit": ["accounting"],
+			"location": ["new york"],
 			"admin_roles": [
 				"sr_sec_officer",
 				"security_officer"
-			]
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "accounting",
-			"location": "san_antonio",
-			"clearance": "secret"
+			"admin_unit": ["accounting"],
+			"location": ["new york"],
+			"clearance": ["secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"auditor"
@@ -55,68 +135,18 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "accounting",
-			"location": "new_york",
-			"admin_roles": ["sr_sec_officer"]
+			"admin_unit": ["finance"],
+			"location": ["san_antonio"],
+			"admin_roles": ["sr_sec_officer"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "accounting",
-			"location": "new_york",
-			"clearance": "confidential"
-		},
-		"role": [
-			"chief_accountant",
-			"sr_accountant",
-			"auditor"
-		]
-	},
-	{
-		"admin": {
-			"admin_unit": "accounting",
-			"location": "new york",
-			"admin_roles": [
-				"sr_sec_officer",
-				"security_officer"
-			]
-		},
-		"user": {
-			"admin_unit": "accounting",
-			"location": "new york",
-			"clearance": "top_secret"
-		},
-		"role": [
-			"sr_accountant",
-			"auditor"
-		]
-	},
-	{
-		"admin": {
-			"admin_unit": "accounting",
-			"location": "new york",
-			"admin_roles": [
-				"sr_sec_officer",
-				"security_officer"
-			]
-		},
-		"user": {
-			"admin_unit": "accounting",
-			"location": "new york",
-			"clearance": "secret"
-		},
-		"role": [
-			"auditor"
-		]
-	},
-	{
-		"admin": {
-			"admin_unit": "finance",
-			"location": "san_antonio",
-			"admin_roles": "sr_sec_officer"
-		},
-		"user": {
-			"admin_unit": "finance",
-			"location": "san_antonio",
-			"clearance": "confidential"
+			"admin_unit": ["finance"],
+			"location": ["san_antonio"],
+			"clearance": ["confidential"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"CFO",
@@ -126,17 +156,21 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "finance",
-			"location": "san_antonio",
+			"admin_unit": ["finance"],
+			"location": ["san_antonio"],
 			"admin_roles": [
 				"sr_sec_officer",
 				"security_officer"
-			]
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "finance",
-			"location": "san_antonio",
-			"clearance": "top_secret"
+			"admin_unit": ["finance"],
+			"location": ["san_antonio"],
+			"clearance": ["top_secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"sr_finance_officer",
@@ -145,17 +179,21 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "finance",
-			"location": "san_antonio",
+			"admin_unit": ["finance"],
+			"location": ["san_antonio"],
 			"admin_roles": [
 				"sr_sec_officer",
 				"security_officer"
-			]
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "finance",
-			"location": "san_antonio",
-			"clearance": "secret"
+			"admin_unit": ["finance"],
+			"location": ["san_antonio"],
+			"clearance": ["secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"finance_officer"
@@ -163,14 +201,18 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "finance",
-			"location": "new_york",
-			"admin_roles": "sr_sec_officer"
+			"admin_unit": ["finance"],
+			"location": ["new_york"],
+			"admin_roles": ["sr_sec_officer"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "finance",
-			"location": "new_york",
-			"clearance": "confidential"
+			"admin_unit": ["finance"],
+			"location": ["new_york"],
+			"clearance": ["confidential"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"CFO",
@@ -180,17 +222,21 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "finance",
-			"location": "new_york",
+			"admin_unit": ["finance"],
+			"location": ["new_york"],
 			"admin_roles": [
 				"sr_sec_officer",
 				"security_officer"
-			]
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "finance",
-			"location": "new_york",
-			"clearance": "top_secret"
+			"admin_unit": ["finance"],
+			"location": ["new_york"],
+			"clearance": ["top_secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"sr_finance_officer",
@@ -199,17 +245,21 @@
 	},
 	{
 		"admin": {
-			"admin_unit": "finance",
-			"location": "new_york",
+			"admin_unit": ["finance"],
+			"location": ["new_york"],
 			"admin_roles": [
 				"sr_sec_officer",
 				"security_officer"
-			]
+			],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"user": {
-			"admin_unit": "finance",
-			"location": "new_york",
-			"clearance": "secret"
+			"admin_unit": ["finance"],
+			"location": ["new_york"],
+			"clearance": ["secret"],
+			"attribute0": ["value0"],
+			"attribute1": ["value1"]
 		},
 		"role": [
 			"finance_officer"

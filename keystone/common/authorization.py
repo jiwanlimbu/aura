@@ -75,6 +75,12 @@ def token_to_auth_context(token):
         auth_context['admin_unit'] = admin_unit
 	auth_context['location'] = location
 	auth_context['admin_roles'] = admin_roles
+        for i in range(11):
+            try:
+                auth_context['attribute'+str(i)] = aura_att.get(admin_username, 'attribute'+str(i)) 
+            except:
+                print "attrbute"+ str(i) + " not found, continuing...."
+                continue
     except KeyError:
         LOG.warning(_LW('RBAC: Invalid user data in token'))
         raise exception.Unauthorized(_('No user_id in token'))

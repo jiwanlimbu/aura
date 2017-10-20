@@ -68,7 +68,7 @@ def enforce(credentials, action, target, do_raise=True):
                      do_raise=do_raise)
     return _ENFORCER.enforce(action, target, credentials, **extra)
 
-#ADDITIONAL CODE FOR ENFORCEMENT
+
 def authorize_aura(credentials, target):
                 print "***********************"
                 print "POLICY ENFORCE"
@@ -77,59 +77,57 @@ def authorize_aura(credentials, target):
                 print "***** Credentials:"
                 print credentials
                 print "***********************"
+
                 admin_unit = ['target.admin_unit']
                 admin_admin_unit = credentials.get('admin_unit')
                 admin_location = credentials.get('location')
-                #print admin_location
+                print admin_location
                 admin_admin_roles = credentials.get('admin_roles')
                 user_admin_unit = target.get('target.admin_unit')
                 user_location = target.get('target.location')
-                #print user_location
+                print user_location
                 user_user_clearance = target.get('target.user_clearance')
                 target_role = target.get('target.role.name')
+
                 with open('/opt/stack/keystone/keystone/policy/backends/attribute_policy.json') as policy:
                     policy = json.load(policy)
                 for i in range(len(policy)):
-                    print "ADMIN ROLES: " 
+                    print "ADMIN ROLES"
                     print policy[i]["role"]
-                    print "Target Role: " + target_role
+		    #for j in (policy[i]["role"]):
 		    if True == (target_role in policy[i]["role"]):
-			print "target role is present: <<" + target_role + ">>"
-                        if (True == (admin_admin_unit in policy[i]["admin"]["admin_unit"]) and True == (user_admin_unit in policy[i]["user"]["admin_unit"])):
-                            print "ADMIN UNIT IS PRESENT: <<" + admin_admin_unit + ">>"
-                            if admin_location in policy[i]["admin"]["location"] and \
-                                user_location in policy[i]["user"]["location"]:
+			print "target role is present!" 
+		        print target_role			
+		    #for j in (policy[i]["role"]):
+                        #if j == target_role:
+                        if (str(policy[i]["admin"]["admin_unit"])) == admin_admin_unit and (str(policy[i]["user"]["admin_unit"])) == user_admin_unit:
+                            print "ADMIN UNIT IS PRESENT!"
+                            print admin_admin_unit
+                            print user_admin_unit
+                            if (str(policy[i]["admin"]["location"])) == admin_location and (str(policy[i]["user"]["location"])) == user_location:
                                 print "LOCATION IS PRESENT"
-                                if (True == (admin_admin_roles in policy[i]["admin"]["admin_roles"])):
-                                    print "ADMIN ROLES MATCH.." 
-                                    print "**********************************"  
-                                    print "USER CLEARANCE :" + user_user_clearance
-                                    print policy[i]["user"]["clearance"]
-                                    print "**********************************"  
-                                    if (True == (user_user_clearance in policy[i]["user"]["clearance"])):
-                                        print "USER CLEARANCE MATCH"
-                                        print "getting there......."
-                                        for j in range(11):
-                                            print "-------------------------------------"
-                                            print "admin_attribute"+str(j)
-                                            print 'user_attribute'+str(j)
-                                            print policy[i]["admin"]
-                                            print policy[i]["user"]
-                                            if "attribute"+str(j) in policy[i]["admin"] and \
-                                                "attribute"+str(j) in policy[i]["user"]:
-                                                admin_attribute_i = credentials.get('attribute'+str(j))
-                                                user_attribute_i = target.get('target.attribute'+str(j))
-                                                if admin_attribute_i in policy[i]["admin"]["attribute"+str(j)] and \
-                                                    user_attribute_i in policy[i]["user"]["attribute"+str(j)]:
-                                                    print "USER + ADMIN ATTRIBUTE"+str(j)+" ARE VALID"
-                                                else: 
-                                                    print "USER + ADMIN ATTRIBUTE"+str(j)+" ARE **NOT** VALID"
-                                                    print admin_attribute_i
-                                                    print policy[i]["admin"]["attribute"+str(j)]
-                                                    print user_attribute_i
-                                                    print policy[i]["user"]["attribute"+str(j)]  
-                                                    raise exception.Forbidden("Unathorised user role assignment attempt!!") 
- 
+                                print admin_location
+                                print user_location
+                                print policy[i]["admin"]["admin_roles"]
+                                print admin_admin_roles
+                                for k in (policy[i]["admin"]["admin_roles"]):
+                                    print "INSIDE ADMIN ROLES" 
+                                    if k == admin_admin_roles:
+                                        print "ADMIN ROLES MATCH.." 
+                                        print policy[i]["admin"]["admin_roles"] 
+                                        print admin_admin_roles 
+                                        print "**********************************"  
+                                        print policy[i]["user"]["clearance"] 
+                                        print user_user_clearance  
+                                        if (str(policy[i]["user"]["clearance"])) == user_user_clearance:
+                                            print "USER CLEARANCE MATCH"
+                                            print(time.time()) 
+                                            print("**********")
+                                            print ("Authorized granted!")
+                                            print("**********")
+                                            return True
+
+                raise exception.Forbidden("Unathorised user role assignment attempt!!") 
 
 class Policy(base.PolicyDriverBase):
     def enforce(self, credentials, action, target):
@@ -141,19 +139,22 @@ class Policy(base.PolicyDriverBase):
 	enforce(credentials, action, target) 	 
         # Now call the AURA authorization
         #traceback.print_stack()
+	print "---------- ACTION ---------------"
+	print action
+        print "---------------------------------"
         if action == 'identity:create_grant' or action == 'identity:revoke_grant': 
             try:
                 authorize_aura(credentials, target)
             except:          
                 end_time = time.time()
                 delta = end_time - start_time
-                print("---------------print time diff FAIL!! ----------------")
-                print delta * 1000
+                print("---------------print time diff ----------------")
+                print delta
                 raise exception.Forbidden("Unathorised user role assignment attempt!!") 
         end_time = time.time()
         delta = end_time - start_time
-        print("---------------print time diff SUCCESS!!----------------")
-        print delta * 1000
+        print("---------------print time diff ----------------")
+        print delta
                      
     def create_policy(self, policy_id, policy):
         raise exception.NotImplemented()

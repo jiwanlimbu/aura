@@ -11,6 +11,9 @@
             "admin_unit": "accounting",
             "location": "san_antonio",
             "admin_roles": "sr_sec_officer",
+            "attribute0": "value0",
+            "attribute1": "value1",
+            "attribute2": "value2",
             "entity": "admin"
         },
         {
@@ -30,8 +33,12 @@
         {
             "id": "tim",
             "admin_unit": "accounting",
-            "location": "austin",
+            "location": "san_antonio",
             "clearance": "top_secret",
+            "attribute0": "value0",
+            "attribute1": "value1",
+            "attribute2": "value2",
+            "attribute3": "value3",
             "entity": "user"
         },
         {
