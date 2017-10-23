@@ -73,9 +73,9 @@ def token_to_auth_context(token):
         location  = aura_att.get(admin_username, "location")
 	admin_roles  = aura_att.get(admin_username, "admin_roles")
         auth_context['admin_unit'] = admin_unit
-	auth_context['location'] = location
-	auth_context['admin_roles'] = admin_roles
-        for i in range(11):
+ 	auth_context['location'] = location
+ 	auth_context['admin_roles'] = admin_roles
+        for i in range(27):
             try:
                 auth_context['attribute'+str(i)] = aura_att.get(admin_username, 'attribute'+str(i)) 
             except:

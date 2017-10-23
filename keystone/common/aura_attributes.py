@@ -11,7 +11,7 @@ class aura_attributes():
     def get(self, username, key):
         for i in range(len(self.data)):
             if str(self.data[i]["id"])==username:
-                print key
-                print(self.data[i][key])
+                #print key
+                #print(self.data[i][key])
                 return(self.data[i][key])
 

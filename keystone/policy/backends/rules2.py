@@ -21,6 +21,7 @@ from oslo_policy import policy as common_policy
 import keystone.conf
 from keystone import exception
 from keystone.policy.backends import base
+import policy_enforcer as JiwanPolicy
 import json
 import traceback
 import time
@@ -68,14 +69,14 @@ def enforce(credentials, action, target, do_raise=True):
     return _ENFORCER.enforce(action, target, credentials, **extra)
 
 #ADDITIONAL CODE FOR ENFORCEMENT
-def authorize_aura(credentials, target):
+ def authorize_aura(credentials, target):
                  #print "***********************"
                  #print "POLICY ENFORCE"
-                 #print "********** TARGET:"
-                # print target
-                # print "********** CREDENTIALS:"
-                # print credentials
-                # print "***********************"
+                 print "********** TARGET:"
+                 print target
+                 print "********** CREDENTIALS:"
+                 print credentials
+                 print "***********************"
                  admin_unit = ['target.admin_unit']
                  admin_admin_unit = credentials.get('admin_unit')
                  admin_location = credentials.get('location')
@@ -102,19 +103,22 @@ def authorize_aura(credentials, target):
                                      #print "ADMIN ROLES MATCH.." 
                                      #print "**********************************"  
                                      #print "USER CLEARANCE :" + user_user_clearance
-                                     #print "**********************************"  
+                                     print "**********************************"  
                                      if user_user_clearance in policy[i]["user"]["clearance"]:
-                                         print "MATCH"
-                                         for j in range(27):
-                                             #print "-------------------------------------"
-                                             if "attribute"+str(j) in policy[i]["admin"] and \
-                                                 "attribute"+str(j) in policy[i]["user"]:
-                                                 admin_attribute_i = credentials.get('attribute'+str(j))
-                                                 user_attribute_i = target.get('target.attribute'+str(j))
-                                                 if  admin_attribute_i not in policy[i]["admin"]["attribute"+str(j)] and \
-                                                     user_attribute_i not in policy[i]["user"]["attribute"+str(j)]:
-                                                     raise exception.Forbidden("Unathorised user role assignment attempt!!") 
-  
+                                         print "USER CLEARANCE MATCH"
+#                                         for j in range(0):
+#                                             #print "-------------------------------------"
+#                                             if "attribute"+str(j) in policy[i]["admin"] and \
+#                                                 "attribute"+str(j) in policy[i]["user"]:
+#                                                 admin_attribute_i = credentials.get('attribute'+str(j))
+#                                                 user_attribute_i = target.get('target.attribute'+str(j))
+#                                                 if admin_attribute_i in policy[i]["admin"]["attribute"+str(j)] and \
+#                                                     user_attribute_i in policy[i]["user"]["attribute"+str(j)]:
+#                                                     print "USER + ADMIN ATTRIBUTE"+str(j)+" ARE VALID"
+#                                                 else: 
+#                                                     #print "USER + ADMIN ATTRIBUTE"+str(j)+" ARE **NOT** VALID"
+#                                                     raise exception.Forbidden("Unathorised user role assignment attempt!!") 
+#  
 
 class Policy(base.PolicyDriverBase):
     def enforce(self, credentials, action, target):
@@ -125,15 +129,15 @@ class Policy(base.PolicyDriverBase):
         start_time = time.time()
 	enforce(credentials, action, target) 	 
         # Now call the AURA authorization
-        if action == 'identity:create_grant' or action == 'identity:revoke_grant': 
-            try:
-                authorize_aura(credentials, target)
-            except:          
-                end_time = time.time()
-                delta = end_time - start_time
-                print("---------------print time diff FAIL!! ----------------")
-                print delta * 1000
-                raise exception.Forbidden("Unathorised user role assignment attempt!!") 
+         if action == 'identity:create_grant' or action == 'identity:revoke_grant': 
+             try:
+                 authorize_aura(credentials, target)
+             except:          
+                 end_time = time.time()
+                 delta = end_time - start_time
+                 print("---------------print time diff FAIL!! ----------------")
+                 print delta * 1000
+                 raise exception.Forbidden("Unathorised user role assignment attempt!!") 
         end_time = time.time()
         delta = end_time - start_time
         print("---------------print time diff SUCCESS!!----------------")

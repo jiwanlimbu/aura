@@ -602,21 +602,13 @@ class GrantAssignmentV3(controller.V3Controller):
                 ref['user'] = self.identity_api.get_user(user_id)
                 #ADDITIONAL CODE FOR ATTRIBUTE EXTRACTION
                 reg_username = ref['user']['name']
-                print reg_username
+                #print reg_username
                 ref['location'] = aura_att.get(reg_username, "location")
                 ref['admin_unit'] = aura_att.get(reg_username, "admin_unit")
                 ref['user_clearance'] = aura_att.get(reg_username, "clearance")
-               # ref['attribute0'] = aura_att.get(reg_username, 'attribute'+str(0))
-                for i in range(11):
+                for i in range(27):
                     try:
                         ref['attribute'+str(i)] = aura_att.get(reg_username, 'attribute'+str(i))
-                        #myattribute = "attribute"+str(i)
-                        #if myattribute in aura_att.get(reg_username, myattribute):
-                        #    print 'I am inside if'
-                        #    ref[myattribute]=aura_att.get(reg_username, myattribute)
-                        #    print "inside attribute"+ str(i)
-                        #else:
-                        #    print 'attribute'+str(i)+" "
                     except:
                         print "attrbute"+ str(i) + " not found, continuing...." 
                         continue 
